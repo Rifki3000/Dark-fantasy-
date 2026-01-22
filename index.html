@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bayangan Abadi - Dark Fantasy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&amp;family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #1a1a2e;
+      --text-primary: #e8e8e8;
+      --accent-danger: #8b0000;
+      --accent-secret: #4a0080;
+    }
+    
+    * {
+      font-family: 'Cormorant Garamond', serif;
+    }
+    
+    .title-font {
+      font-family: 'Cinzel', serif;
+    }
+    
+    /* Noise overlay */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.03;
+      z-index: 100;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+    
+    /* Fog animation */
+    .fog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(20, 20, 40, 0.3) 25%, 
+        transparent 50%, 
+        rgba(20, 20, 40, 0.2) 75%, 
+        transparent 100%);
+      animation: fogMove 30s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    @keyframes fogMove {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0%); }
+    }
+    
+    /* Typewriter effect */
+    .typewriter {
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeInText 0.5s ease forwards;
+    }
+    
+    @keyframes fadeInText {
+      to { opacity: 1; }
+    }
+    
+    /* Button hover effects */
+    .choice-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(139, 0, 0, 0.3);
+    }
+    
+    .choice-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(139, 0, 0, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .choice-btn:hover::before {
+      left: 100%;
+    }
+    
+    .choice-btn:hover {
+      box-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
+      border-color: rgba(139, 0, 0, 0.8);
+      transform: translateY(-2px);
+    }
+    
+    .choice-btn.secret:hover {
+      box-shadow: 0 0 25px rgba(74, 0, 128, 0.6);
+      border-color: rgba(74, 0, 128, 0.8);
+    }
+    
+    .choice-btn.danger:hover {
+      box-shadow: 0 0 25px rgba(200, 0, 0, 0.7);
+    }
+    
+    /* Screen shake */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+    
+    /* Secret discovery effects */
+    @keyframes secretFlash {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    
+    .secret-flash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(74, 0, 128, 0.8);
+      z-index: 200;
+      animation: secretFlash 0.8s ease-out forwards;
+      pointer-events: none;
+    }
+    
+    @keyframes glitchText {
+      0%, 100% { 
+        text-shadow: 2px 0 #8b0000, -2px 0 #4a0080;
+        transform: translate(0);
+      }
+      20% { 
+        text-shadow: -2px 0 #8b0000, 2px 0 #4a0080;
+        transform: translate(-2px, 2px);
+      }
+      40% { 
+        text-shadow: 2px 0 #4a0080, -2px 0 #8b0000;
+        transform: translate(2px, -2px);
+      }
+      60% { 
+        text-shadow: -2px 0 #4a0080, 2px 0 #8b0000;
+        transform: translate(-2px, -2px);
+      }
+      80% { 
+        text-shadow: 2px 0 #8b0000, -2px 0 #4a0080;
+        transform: translate(2px, 2px);
+      }
+    }
+    
+    .glitch-text {
+      animation: glitchText 0.3s ease infinite;
+    }
+    
+    @keyframes secretBadge {
+      0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+      50% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    
+    .secret-badge {
+      animation: secretBadge 0.8s ease-out forwards;
+    }
+    
+    /* Corruption indicator */
+    @keyframes corruptPulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+    
+    .corruption-icon {
+      animation: corruptPulse 2s ease-in-out infinite;
+    }
+    
+    /* Fade transitions */
+    .fade-enter {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .fade-enter-active {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.6s ease;
+    }
+    
+    /* Background states */
+    .bg-normal {
+      background: linear-gradient(180deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+    }
+    
+    .bg-danger {
+      background: linear-gradient(180deg, #0a0a0f 0%, #2e1a1a 50%, #1a0a0a 100%);
+    }
+    
+    .bg-secret {
+      background: linear-gradient(180deg, #0a0a0f 0%, #1a1a3e 50%, #0a0a2f 100%);
+    }
+    
+    .bg-ending {
+      background: linear-gradient(180deg, #000000 0%, #0a0a0f 50%, #000000 100%);
+    }
+    
+    /* Rune symbols */
+    @keyframes runeGlow {
+      0%, 100% { text-shadow: 0 0 10px #4a0080, 0 0 20px #4a0080; }
+      50% { text-shadow: 0 0 20px #8b0000, 0 0 40px #8b0000; }
+    }
+    
+    .rune-glow {
+      animation: runeGlow 3s ease-in-out infinite;
+    }
+    
+    /* Scroll styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #0a0a0f;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #8b0000;
+      border-radius: 3px;
+    }
+    
+    /* Restart button */
+    @keyframes restartPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.4); }
+      50% { box-shadow: 0 0 0 15px rgba(139, 0, 0, 0); }
+    }
+    
+    .restart-btn:hover {
+      animation: restartPulse 1.5s ease-in-out infinite;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-normal text-gray-200 overflow-x-hidden">
+  <div class="noise-overlay"></div>
+  <div class="fog"></div>
+  <div id="secret-flash-container"></div>
+  <div class="relative z-10 min-h-full flex flex-col"><!-- Header -->
+   <header class="p-4 md:p-6 text-center border-b border-red-900/20">
+    <h1 id="main-title" class="title-font text-2xl md:text-4xl font-bold text-gray-100 tracking-widest rune-glow">BAYANGAN ABADI</h1>
+    <p class="text-sm text-gray-500 mt-2 italic">Sebuah kisah kegelapan yang tak berujung...</p><!-- Corruption & Stats Bar -->
+    <div id="stats-bar" class="flex justify-center items-center gap-6 mt-4 text-xs">
+     <div class="flex items-center gap-2"><span class="text-gray-500">Korupsi:</span>
+      <div id="corruption-display" class="flex gap-1"><!-- Corruption icons will be added here -->
+      </div>
+     </div>
+     <div id="secrets-found" class="flex items-center gap-2 hidden"><span class="text-purple-400">☽</span> <span class="text-purple-300 text-xs">Rahasia Ditemukan</span>
+     </div>
+    </div>
+   </header><!-- Main Story Container -->
+   <main class="flex-1 flex flex-col items-center justify-center p-4 md:p-8">
+    <div id="story-container" class="w-full max-w-2xl"><!-- Start Screen -->
+     <div id="start-screen" class="text-center fade-enter-active">
+      <div class="mb-8">
+       <svg class="w-24 h-24 mx-auto mb-6 text-red-900 opacity-70" viewbox="0 0 100 100" fill="currentColor"><path d="M50 5 L60 35 L95 35 L67 55 L77 90 L50 70 L23 90 L33 55 L5 35 L40 35 Z" stroke="currentColor" stroke-width="1" fill="none" /> <circle cx="50" cy="50" r="15" fill="currentColor" opacity="0.3" />
+       </svg>
+      </div>
+      <h2 class="title-font text-xl md:text-2xl mb-4 text-gray-300">Kau terbangun di kegelapan...</h2>
+      <p class="text-gray-400 mb-8 leading-relaxed max-w-md mx-auto">Tanpa nama. Tanpa ingatan. Hanya kekosongan yang memelukmu di dunia yang telah dilupakan oleh cahaya.</p><button id="start-btn" class="choice-btn bg-gray-900/50 px-8 py-4 text-lg title-font tracking-wider hover:bg-gray-800/50 transition-all"> ⛧ MULAI PERJALANAN ⛧ </button>
+      <div id="continue-btn-container" class="mt-4 hidden"><button id="continue-btn" class="text-gray-500 hover:text-gray-300 text-sm underline transition-colors"> Lanjutkan perjalanan terakhir... </button>
+      </div>
+     </div><!-- Story Screen -->
+     <div id="story-screen" class="hidden"><!-- Scene Type Indicator -->
+      <div id="scene-indicator" class="text-center mb-4"><span id="scene-badge" class="text-xs px-3 py-1 rounded-full bg-gray-800/50 text-gray-500 hidden"></span>
+      </div><!-- Story Text -->
+      <div id="story-text" class="text-lg md:text-xl leading-relaxed text-gray-200 mb-8 text-center typewriter">
+      </div><!-- Choices -->
+      <div id="choices-container" class="space-y-3">
+      </div>
+     </div><!-- Ending Screen -->
+     <div id="ending-screen" class="hidden text-center">
+      <div id="ending-symbol" class="text-6xl mb-6 rune-glow">
+       ☠
+      </div>
+      <h2 id="ending-title" class="title-font text-2xl md:text-3xl mb-4 text-gray-100"></h2>
+      <p id="ending-text" class="text-gray-400 mb-6 leading-relaxed"></p>
+      <div id="ending-stats" class="text-sm text-gray-500 mb-8 space-y-1"></div><button id="restart-btn" class="restart-btn choice-btn bg-red-900/30 px-8 py-4 title-font tracking-wider hover:bg-red-900/50 transition-all"> ↺ MULAI ULANG </button>
+     </div>
+    </div>
+   </main><!-- Footer -->
+   <footer class="p-4 text-center text-xs text-gray-600 border-t border-red-900/10"><span class="rune-glow">⛧</span> Kisah kegelapan yang abadi <span class="rune-glow">⛧</span>
+   </footer>
+  </div><!-- Secret Discovery Overlay -->
+  <div id="secret-overlay" class="fixed inset-0 z-300 hidden flex items-center justify-center bg-black/90">
+   <div class="text-center">
+    <div class="text-6xl mb-4 secret-badge">
+     ☽
+    </div>
+    <h3 class="title-font text-2xl text-purple-400 glitch-text mb-2">RAHASIA DITEMUKAN</h3>
+    <p id="secret-message" class="text-gray-400"></p>
+   </div>
+  </div>
+  <script>
+    // ==================== STORY DATA ====================
+    const storyData = {
+      // === OPENING ===
+      "start": {
+        text: "Kegelapan menyelimuti segalanya. Kau berdiri di tengah reruntuhan kuil kuno yang telah dilupakan waktu. Di hadapanmu, tiga jalan membentang—masing-masing ditelan bayangan yang berbisik.",
+        choices: [
+          { text: "Ikuti suara bisikan yang memanggil namamu", next: "whisper_path", type: "normal" },
+          { text: "Berjalan menuju cahaya merah yang berkedip di kejauhan", next: "red_light", type: "danger", addCorruption: 1 },
+          { text: "Periksa altar berdarah di tengah kuil", next: "blood_altar", type: "secret", requireCorruption: 0 }
+        ],
+        sceneType: "normal"
+      },
+      
+      // === NORMAL PATH ===
+      "whisper_path": {
+        text: "Suara bisikan itu semakin jelas. Seorang wanita berkerudung hitam muncul dari kabut. Wajahnya tak terlihat, namun kau merasakan tatapannya menembus jiwamu. 'Kau telah lama ditunggu, Pengembara...'",
+        choices: [
+          { text: "Tanyakan siapa dirinya", next: "ask_woman", type: "normal" },
+          { text: "Minta dia menunjukkan jalan keluar", next: "request_exit", type: "normal" },
+          { text: "Serang wanita itu dengan tanganmu kosong", next: "attack_woman", type: "danger", addCorruption: 2 }
+        ],
+        sceneType: "normal"
+      },
+      
+      "ask_woman": {
+        text: "'Aku adalah penjaga gerbang antara dunia yang hidup dan yang mati,' bisiknya. 'Kau terjebak di sini karena dosa yang tak kau ingat. Hanya dengan menghadapi kegelapan dalam dirimu, kau bisa bebas.'",
+        choices: [
+          { text: "Terima tawarannya untuk membimbingmu", next: "accept_guidance", type: "normal" },
+          { text: "Tolak dan cari jalanmu sendiri", next: "reject_guidance", type: "danger", addCorruption: 1 }
+        ],
+        sceneType: "normal"
+      },
+      
+      "accept_guidance": {
+        text: "Wanita itu mengulurkan tangan pucat. Saat kau menyentuhnya, visi-visi masa lalu membanjiri pikiranmu. Kau melihat dirimu yang lain—versi yang lebih gelap, lebih kejam. 'Untuk bebas, kau harus memilih,' bisiknya.",
+        choices: [
+          { text: "Ampuni dirimu yang lalu", next: "forgive_self", type: "normal" },
+          { text: "Terima kegelapan sebagai bagian darimu", next: "embrace_darkness", type: "danger", addCorruption: 2 }
+        ],
+        sceneType: "normal"
+      },
+      
+      "forgive_self": {
+        text: "Air mata mengalir dari matamu yang tak pernah menangis. Beban yang tak terlihat terangkat dari bahumu. Wanita itu tersenyum—senyuman pertama yang kau lihat di dunia ini. Cahaya putih mulai muncul di kejauhan.",
+        choices: [
+          { text: "Berjalan menuju cahaya", next: "ending_redemption", type: "normal" }
+        ],
+        sceneType: "normal"
+      },
+      
+      // === DARK PATH 1 ===
+      "red_light": {
+        text: "Cahaya merah itu berasal dari mata raksasa seekor makhluk yang terbaring—setengah hidup, setengah mati. Sisiknya berkilau seperti batu rubi yang berdarah. Makhluk itu berbicara langsung ke dalam pikiranmu: 'Kau mencari kekuatan?'",
+        choices: [
+          { text: "Ya, aku ingin kekuatan untuk keluar dari sini", next: "accept_power", type: "danger", addCorruption: 2 },
+          { text: "Tidak, aku hanya ingin pulang", next: "refuse_power", type: "normal" },
+          { text: "[Korupsi 3+] Persembahkan darahmu padanya", next: "blood_offering", type: "secret", requireCorruption: 3, addCorruption: 3 }
+        ],
+        sceneType: "danger"
+      },
+      
+      "accept_power": {
+        text: "Tawa makhluk itu bergema di dalam tengkorakmu. Energi gelap mengalir ke tubuhmu—membakar, namun juga membebaskan. Kau merasakan kekuatan yang tak pernah kau bayangkan. Tapi ada harga yang harus dibayar...",
+        choices: [
+          { text: "Gunakan kekuatan untuk melarikan diri", next: "use_power_escape", type: "danger", addCorruption: 1 },
+          { text: "Kendalikan kekuatan itu", next: "control_power", type: "normal" }
+        ],
+        sceneType: "danger"
+      },
+      
+      "use_power_escape": {
+        text: "Kekuatan itu menghancurkan dinding realitas. Kau melarikan diri, namun bayangan mengikutimu. Ke mana pun kau pergi, kegelapan selalu di sana—menunggu, mengintai. Kau bebas, namun tak pernah sendiri lagi.",
+        choices: [
+          { text: "Lanjutkan perjalanan dalam kegelapan", next: "ending_corrupted" }
+        ],
+        sceneType: "danger"
+      },
+      
+      "control_power": {
+        text: "Dengan tekad baja, kau menekan energi gelap itu ke dalam dirimu. Rasa sakit yang luar biasa merobek kesadaranmu, namun kau bertahan. Makhluk itu menatapmu dengan... rasa hormat? 'Kau lebih kuat dari yang kuduga, Pengembara.'",
+        choices: [
+          { text: "Minta makhluk itu menunjukkan jalan", next: "beast_guidance", type: "normal" },
+          { text: "Bunuh makhluk itu dan ambil seluruh kekuatannya", next: "kill_beast", type: "danger", addCorruption: 4 }
+        ],
+        sceneType: "danger"
+      },
+      
+      // === DARK PATH 2 ===
+      "attack_woman": {
+        text: "Tanganmu menembus tubuhnya seperti menembus kabut. Wanita itu tertawa—suara yang dingin dan tanpa jiwa. 'Kekerasan... itulah jawabanmu?' Sosoknya berubah menjadi bayangan-bayangan yang melilit tubuhmu.",
+        choices: [
+          { text: "Berteriak minta tolong", next: "scream_help", type: "normal" },
+          { text: "Biarkan bayangan itu menelanmu", next: "embrace_shadow", type: "danger", addCorruption: 3 }
+        ],
+        sceneType: "danger"
+      },
+      
+      "embrace_shadow": {
+        text: "Bayangan itu menjadi bagian darimu. Kau bukan lagi pengembara yang tersesat—kau adalah kegelapan itu sendiri. Dunia ini bukan penjara lagi, ini adalah kerajaanmu.",
+        choices: [
+          { text: "Terima takdirmu sebagai Raja Bayangan", next: "ending_shadow_king" }
+        ],
+        sceneType: "danger"
+      },
+      
+      "reject_guidance": {
+        text: "Kau berbalik dan berjalan pergi. Wanita itu tak menghentikanmu. 'Kau akan kembali,' bisiknya dari kejauhan. 'Mereka semua kembali.' Sendirian, kau menyusuri labirin kegelapan yang tak berujung.",
+        choices: [
+          { text: "Terus berjalan meski tanpa arah", next: "endless_walk", type: "normal" },
+          { text: "Duduk dan menyerah", next: "give_up", type: "danger", addCorruption: 1 }
+        ],
+        sceneType: "normal"
+      },
+      
+      "endless_walk": {
+        text: "Langkahmu membawamu melewati pemandangan yang semakin aneh—kota-kota terbalik, lautan api, hutan tulang. Setelah waktu yang terasa seperti keabadian, kau menemukan sebuah cermin hitam yang memantulkan wajah... bukan milikmu.",
+        choices: [
+          { text: "Sentuh cermin itu", next: "touch_mirror", type: "secret", secretId: "mirror_realm" },
+          { text: "Hancurkan cermin itu", next: "break_mirror", type: "danger", addCorruption: 2 }
+        ],
+        sceneType: "normal"
+      },
+      
+      // === SECRET PATHS ===
+      "blood_altar": {
+        text: "Di balik altar, kau menemukan simbol-simbol kuno yang bercahaya samar. Tanganmu bergerak sendiri, menelusuri ukiran itu. Pengetahuan terlarang mengalir ke otakmu—rahasia yang seharusnya tak diketahui manusia.",
+        choices: [
+          { text: "Hentikan dan mundur", next: "altar_retreat", type: "normal" },
+          { text: "Selesaikan ritual kuno", next: "complete_ritual", type: "secret", secretId: "ancient_knowledge", addCorruption: 2 }
+        ],
+        sceneType: "secret",
+        isSecret: true,
+        secretMessage: "Altar Berdarah telah mengungkap rahasianya..."
+      },
+      
+      "complete_ritual": {
+        text: "Ritual selesai. Realitas di sekitarmu retak seperti kaca. Di balik retakan itu, kau melihat kebenaran—dunia ini adalah mimpi buruk seseorang, dan seseorang itu adalah... dirimu sendiri.",
+        choices: [
+          { text: "Bangun dari mimpi", next: "wake_up", type: "normal" },
+          { text: "Tetap dalam mimpi selamanya", next: "eternal_dream", type: "danger", addCorruption: 3 },
+          { text: "[Rahasia Lengkap] Ubah mimpi menjadi kenyataan", next: "ending_true", type: "secret", requireSecrets: 3 }
+        ],
+        sceneType: "secret",
+        isSecret: true,
+        secretMessage: "Kebenaran mulai terungkap..."
+      },
+      
+      "touch_mirror": {
+        text: "Tanganmu menembus permukaan cermin seperti air yang tenang. Di sisi lain, ada dunia yang sama namun terbalik—di mana kegelapan adalah cahaya, dan kematian adalah kehidupan.",
+        choices: [
+          { text: "Masuk sepenuhnya ke dunia cermin", next: "enter_mirror", type: "secret", secretId: "mirror_world", addCorruption: 1 },
+          { text: "Tarik tanganmu kembali", next: "retreat_mirror", type: "normal" }
+        ],
+        sceneType: "secret",
+        isSecret: true,
+        secretMessage: "Dunia Cermin telah ditemukan..."
+      },
+      
+      "enter_mirror": {
+        text: "Di dunia cermin, kau menemukan versi lain dari dirimu—yang lebih bijak, lebih kuat, namun juga lebih sedih. 'Aku telah menunggumu,' katanya. 'Bersama, kita bisa mengakhiri semua ini.'",
+        choices: [
+          { text
