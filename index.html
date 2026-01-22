@@ -316,165 +316,158 @@
    </div>
   </div>
   <script>
-    // ==================== STORY DATA ====================
-    const storyData = {
-      // === OPENING ===
-      "start": {
-        text: "Kegelapan menyelimuti segalanya. Kau berdiri di tengah reruntuhan kuil kuno yang telah dilupakan waktu. Di hadapanmu, tiga jalan membentang—masing-masing ditelan bayangan yang berbisik.",
-        choices: [
-          { text: "Ikuti suara bisikan yang memanggil namamu", next: "whisper_path", type: "normal" },
-          { text: "Berjalan menuju cahaya merah yang berkedip di kejauhan", next: "red_light", type: "danger", addCorruption: 1 },
-          { text: "Periksa altar berdarah di tengah kuil", next: "blood_altar", type: "secret", requireCorruption: 0 }
-        ],
-        sceneType: "normal"
-      },
-      
-      // === NORMAL PATH ===
-      "whisper_path": {
-        text: "Suara bisikan itu semakin jelas. Seorang wanita berkerudung hitam muncul dari kabut. Wajahnya tak terlihat, namun kau merasakan tatapannya menembus jiwamu. 'Kau telah lama ditunggu, Pengembara...'",
-        choices: [
-          { text: "Tanyakan siapa dirinya", next: "ask_woman", type: "normal" },
-          { text: "Minta dia menunjukkan jalan keluar", next: "request_exit", type: "normal" },
-          { text: "Serang wanita itu dengan tanganmu kosong", next: "attack_woman", type: "danger", addCorruption: 2 }
-        ],
-        sceneType: "normal"
-      },
-      
-      "ask_woman": {
-        text: "'Aku adalah penjaga gerbang antara dunia yang hidup dan yang mati,' bisiknya. 'Kau terjebak di sini karena dosa yang tak kau ingat. Hanya dengan menghadapi kegelapan dalam dirimu, kau bisa bebas.'",
-        choices: [
-          { text: "Terima tawarannya untuk membimbingmu", next: "accept_guidance", type: "normal" },
-          { text: "Tolak dan cari jalanmu sendiri", next: "reject_guidance", type: "danger", addCorruption: 1 }
-        ],
-        sceneType: "normal"
-      },
-      
-      "accept_guidance": {
-        text: "Wanita itu mengulurkan tangan pucat. Saat kau menyentuhnya, visi-visi masa lalu membanjiri pikiranmu. Kau melihat dirimu yang lain—versi yang lebih gelap, lebih kejam. 'Untuk bebas, kau harus memilih,' bisiknya.",
-        choices: [
-          { text: "Ampuni dirimu yang lalu", next: "forgive_self", type: "normal" },
-          { text: "Terima kegelapan sebagai bagian darimu", next: "embrace_darkness", type: "danger", addCorruption: 2 }
-        ],
-        sceneType: "normal"
-      },
-      
-      "forgive_self": {
-        text: "Air mata mengalir dari matamu yang tak pernah menangis. Beban yang tak terlihat terangkat dari bahumu. Wanita itu tersenyum—senyuman pertama yang kau lihat di dunia ini. Cahaya putih mulai muncul di kejauhan.",
-        choices: [
-          { text: "Berjalan menuju cahaya", next: "ending_redemption", type: "normal" }
-        ],
-        sceneType: "normal"
-      },
-      
-      // === DARK PATH 1 ===
-      "red_light": {
-        text: "Cahaya merah itu berasal dari mata raksasa seekor makhluk yang terbaring—setengah hidup, setengah mati. Sisiknya berkilau seperti batu rubi yang berdarah. Makhluk itu berbicara langsung ke dalam pikiranmu: 'Kau mencari kekuatan?'",
-        choices: [
-          { text: "Ya, aku ingin kekuatan untuk keluar dari sini", next: "accept_power", type: "danger", addCorruption: 2 },
-          { text: "Tidak, aku hanya ingin pulang", next: "refuse_power", type: "normal" },
-          { text: "[Korupsi 3+] Persembahkan darahmu padanya", next: "blood_offering", type: "secret", requireCorruption: 3, addCorruption: 3 }
-        ],
-        sceneType: "danger"
-      },
-      
-      "accept_power": {
-        text: "Tawa makhluk itu bergema di dalam tengkorakmu. Energi gelap mengalir ke tubuhmu—membakar, namun juga membebaskan. Kau merasakan kekuatan yang tak pernah kau bayangkan. Tapi ada harga yang harus dibayar...",
-        choices: [
-          { text: "Gunakan kekuatan untuk melarikan diri", next: "use_power_escape", type: "danger", addCorruption: 1 },
-          { text: "Kendalikan kekuatan itu", next: "control_power", type: "normal" }
-        ],
-        sceneType: "danger"
-      },
-      
-      "use_power_escape": {
-        text: "Kekuatan itu menghancurkan dinding realitas. Kau melarikan diri, namun bayangan mengikutimu. Ke mana pun kau pergi, kegelapan selalu di sana—menunggu, mengintai. Kau bebas, namun tak pernah sendiri lagi.",
-        choices: [
-          { text: "Lanjutkan perjalanan dalam kegelapan", next: "ending_corrupted" }
-        ],
-        sceneType: "danger"
-      },
-      
-      "control_power": {
-        text: "Dengan tekad baja, kau menekan energi gelap itu ke dalam dirimu. Rasa sakit yang luar biasa merobek kesadaranmu, namun kau bertahan. Makhluk itu menatapmu dengan... rasa hormat? 'Kau lebih kuat dari yang kuduga, Pengembara.'",
-        choices: [
-          { text: "Minta makhluk itu menunjukkan jalan", next: "beast_guidance", type: "normal" },
-          { text: "Bunuh makhluk itu dan ambil seluruh kekuatannya", next: "kill_beast", type: "danger", addCorruption: 4 }
-        ],
-        sceneType: "danger"
-      },
-      
-      // === DARK PATH 2 ===
-      "attack_woman": {
-        text: "Tanganmu menembus tubuhnya seperti menembus kabut. Wanita itu tertawa—suara yang dingin dan tanpa jiwa. 'Kekerasan... itulah jawabanmu?' Sosoknya berubah menjadi bayangan-bayangan yang melilit tubuhmu.",
-        choices: [
-          { text: "Berteriak minta tolong", next: "scream_help", type: "normal" },
-          { text: "Biarkan bayangan itu menelanmu", next: "embrace_shadow", type: "danger", addCorruption: 3 }
-        ],
-        sceneType: "danger"
-      },
-      
-      "embrace_shadow": {
-        text: "Bayangan itu menjadi bagian darimu. Kau bukan lagi pengembara yang tersesat—kau adalah kegelapan itu sendiri. Dunia ini bukan penjara lagi, ini adalah kerajaanmu.",
-        choices: [
-          { text: "Terima takdirmu sebagai Raja Bayangan", next: "ending_shadow_king" }
-        ],
-        sceneType: "danger"
-      },
-      
-      "reject_guidance": {
-        text: "Kau berbalik dan berjalan pergi. Wanita itu tak menghentikanmu. 'Kau akan kembali,' bisiknya dari kejauhan. 'Mereka semua kembali.' Sendirian, kau menyusuri labirin kegelapan yang tak berujung.",
-        choices: [
-          { text: "Terus berjalan meski tanpa arah", next: "endless_walk", type: "normal" },
-          { text: "Duduk dan menyerah", next: "give_up", type: "danger", addCorruption: 1 }
-        ],
-        sceneType: "normal"
-      },
-      
-      "endless_walk": {
-        text: "Langkahmu membawamu melewati pemandangan yang semakin aneh—kota-kota terbalik, lautan api, hutan tulang. Setelah waktu yang terasa seperti keabadian, kau menemukan sebuah cermin hitam yang memantulkan wajah... bukan milikmu.",
-        choices: [
-          { text: "Sentuh cermin itu", next: "touch_mirror", type: "secret", secretId: "mirror_realm" },
-          { text: "Hancurkan cermin itu", next: "break_mirror", type: "danger", addCorruption: 2 }
-        ],
-        sceneType: "normal"
-      },
-      
-      // === SECRET PATHS ===
-      "blood_altar": {
-        text: "Di balik altar, kau menemukan simbol-simbol kuno yang bercahaya samar. Tanganmu bergerak sendiri, menelusuri ukiran itu. Pengetahuan terlarang mengalir ke otakmu—rahasia yang seharusnya tak diketahui manusia.",
-        choices: [
-          { text: "Hentikan dan mundur", next: "altar_retreat", type: "normal" },
-          { text: "Selesaikan ritual kuno", next: "complete_ritual", type: "secret", secretId: "ancient_knowledge", addCorruption: 2 }
-        ],
-        sceneType: "secret",
-        isSecret: true,
-        secretMessage: "Altar Berdarah telah mengungkap rahasianya..."
-      },
-      
-      "complete_ritual": {
-        text: "Ritual selesai. Realitas di sekitarmu retak seperti kaca. Di balik retakan itu, kau melihat kebenaran—dunia ini adalah mimpi buruk seseorang, dan seseorang itu adalah... dirimu sendiri.",
-        choices: [
-          { text: "Bangun dari mimpi", next: "wake_up", type: "normal" },
-          { text: "Tetap dalam mimpi selamanya", next: "eternal_dream", type: "danger", addCorruption: 3 },
-          { text: "[Rahasia Lengkap] Ubah mimpi menjadi kenyataan", next: "ending_true", type: "secret", requireSecrets: 3 }
-        ],
-        sceneType: "secret",
-        isSecret: true,
-        secretMessage: "Kebenaran mulai terungkap..."
-      },
-      
-      "touch_mirror": {
-        text: "Tanganmu menembus permukaan cermin seperti air yang tenang. Di sisi lain, ada dunia yang sama namun terbalik—di mana kegelapan adalah cahaya, dan kematian adalah kehidupan.",
-        choices: [
-          { text: "Masuk sepenuhnya ke dunia cermin", next: "enter_mirror", type: "secret", secretId: "mirror_world", addCorruption: 1 },
-          { text: "Tarik tanganmu kembali", next: "retreat_mirror", type: "normal" }
-        ],
-        sceneType: "secret",
-        isSecret: true,
-        secretMessage: "Dunia Cermin telah ditemukan..."
-      },
-      
-      "enter_mirror": {
-        text: "Di dunia cermin, kau menemukan versi lain dari dirimu—yang lebih bijak, lebih kuat, namun juga lebih sedih. 'Aku telah menunggumu,' katanya. 'Bersama, kita bisa mengakhiri semua ini.'",
-        choices: [
-          { text
+/* ==================== STORY DATA (LANJUTAN + PENUTUP) ==================== */
+const storyData = {
+  start: {
+    text: "Kegelapan menyelimuti segalanya. Kau berdiri di tengah reruntuhan kuil kuno yang telah dilupakan waktu.",
+    choices: [
+      { text: "Ikuti suara bisikan", next: "whisper_path" },
+      { text: "Menuju cahaya merah", next: "red_light", addCorruption: 1 },
+      { text: "Periksa altar berdarah", next: "blood_altar", type: "secret" }
+    ]
+  },
+
+  whisper_path: {
+    text: "Wanita berkerudung hitam muncul dari kabut.",
+    choices: [
+      { text: "Tanya siapa dia", next: "ask_woman" },
+      { text: "Serang dia", next: "attack_woman", addCorruption: 2 }
+    ]
+  },
+
+  ask_woman: {
+    text: "'Aku penjaga antara hidup dan mati.'",
+    choices: [
+      { text: "Terima bimbingan", next: "forgive_self" },
+      { text: "Menolak", next: "endless_walk", addCorruption: 1 }
+    ]
+  },
+
+  forgive_self: {
+    text: "Kau memaafkan dirimu. Cahaya muncul.",
+    choices: [{ text: "Menuju cahaya", next: "ending_redemption" }]
+  },
+
+  red_light: {
+    text: "Makhluk bermata merah menatapmu.",
+    choices: [
+      { text: "Terima kekuatan", next: "ending_corrupted", addCorruption: 3 },
+      { text: "Menolak", next: "endless_walk" }
+    ]
+  },
+
+  blood_altar: {
+    text: "Simbol terlarang menyala.",
+    choices: [
+      { text: "Lanjutkan ritual", next: "ending_true", type: "secret" },
+      { text: "Mundur", next: "endless_walk" }
+    ]
+  },
+
+  endless_walk: {
+    text: "Kau berjalan tanpa akhir.",
+    choices: [{ text: "Menyerah", next: "ending_void" }]
+  },
+
+  attack_woman: {
+    text: "Bayangan menelan tubuhmu.",
+    choices: [{ text: "Terima kegelapan", next: "ending_shadow" }]
+  },
+
+  /* ===== ENDINGS ===== */
+  ending_redemption: {
+    ending: true,
+    title: "PENEBUSAN",
+    text: "Kau terbangun sebagai jiwa yang bebas."
+  },
+
+  ending_corrupted: {
+    ending: true,
+    title: "TERKUTUK",
+    text: "Kau hidup, tapi kegelapan ikut bersamamu."
+  },
+
+  ending_shadow: {
+    ending: true,
+    title: "RAJA BAYANGAN",
+    text: "Dunia ini kini milikmu."
+  },
+
+  ending_true: {
+    ending: true,
+    title: "KARANAN SEJATI",
+    text: "Semua hanyalah mimpi—dan kau pemimpinya."
+  },
+
+  ending_void: {
+    ending: true,
+    title: "KEKOSONGAN",
+    text: "Tidak ada cahaya. Tidak ada akhir."
+  }
+};
+
+/* ==================== GAME ENGINE ==================== */
+const startBtn = document.getElementById("start-btn");
+const startScreen = document.getElementById("start-screen");
+const storyScreen = document.getElementById("story-screen");
+const endingScreen = document.getElementById("ending-screen");
+
+const storyText = document.getElementById("story-text");
+const choicesContainer = document.getElementById("choices-container");
+
+const endingTitle = document.getElementById("ending-title");
+const endingText = document.getElementById("ending-text");
+const restartBtn = document.getElementById("restart-btn");
+
+let corruption = 0;
+let secrets = 0;
+
+/* START BUTTON */
+startBtn.addEventListener("click", () => {
+  startScreen.classList.add("hidden");
+  storyScreen.classList.remove("hidden");
+  loadScene("start");
+});
+
+/* LOAD SCENE */
+function loadScene(id) {
+  const scene = storyData[id];
+  if (!scene) return;
+
+  if (scene.ending) {
+    showEnding(scene);
+    return;
+  }
+
+  storyText.innerText = scene.text;
+  choicesContainer.innerHTML = "";
+
+  scene.choices.forEach(choice => {
+    const btn = document.createElement("button");
+    btn.className =
+      "choice-btn w-full px-5 py-3 bg-gray-900/50 hover:bg-gray-800/50 transition-all";
+
+    btn.innerText = choice.text;
+
+    btn.onclick = () => {
+      if (choice.addCorruption) corruption += choice.addCorruption;
+      if (choice.type === "secret") secrets++;
+      loadScene(choice.next);
+    };
+
+    choicesContainer.appendChild(btn);
+  });
+}
+
+/* SHOW ENDING */
+function showEnding(scene) {
+  storyScreen.classList.add("hidden");
+  endingScreen.classList.remove("hidden");
+
+  endingTitle.innerText = scene.title;
+  endingText.innerText = scene.text;
+}
+
+/* RESTART */
+restartBtn.onclick = () => location.reload();
+</script>
